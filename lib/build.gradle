@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+archivesBaseName = "${project.archives_base_name}"
+version = "${project.lib_version}"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api 'net.java.dev.jna:jna:5.12.1', files('temp-libs/java-openal-2.0.0.jar')
+}
