@@ -45,15 +45,13 @@ public class KeyInput implements KeyListener{
 			
 			_keyPressed[key] = false;
 			_keyLowering[key] = false;
-			
-			if(_lastTick[key] && !(_keyHeld[key])) {	//falling edge -> key is going down, beginning of a key press
-				_keyPressed[key] = true;
-			}
-			
-			if(!(_lastTick[key]) && _keyHeld[key]) {	//rising edge -> key is going up, end of a key press
-				_keyLowering[key] = true;
-			}
-			
+
+			//falling edge -> button is going down, beginning of a button press
+			_keyPressed[key] = _lastTick[key] && !_keyHeld[key];
+
+			//rising edge -> button is going up, end of a button press
+			_keyLowering[key] = !_lastTick[key] && _keyHeld[key];
+
 			_lastTick[key] = _keyHeld[key];	//copy keyHeld to LastTick
 		}
 	}
