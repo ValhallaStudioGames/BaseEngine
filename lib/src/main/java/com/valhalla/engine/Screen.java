@@ -1,11 +1,16 @@
 package com.valhalla.engine;
 
 import java.awt.*;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
 import com.valhalla.engine.internal.Internal;
 
+/**
+ * Class is in charge of the physical screen.
+ * @author BauwenDR
+ */
 public class Screen implements Runnable {
 	
 	private static boolean _screenRunning = false;
@@ -26,7 +31,7 @@ public class Screen implements Runnable {
 	
 	private static double _amountOfTicks = 0;
 
-	private static GraphicsEnvironment _graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	private static final GraphicsEnvironment _graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	
 	static boolean _showErrors = false;
 	
@@ -64,7 +69,7 @@ public class Screen implements Runnable {
 			_renderer.join();
 			_screenRunning = false;
 		}catch(Exception e) {
-			GameLoop.engineOutput.println(e.getStackTrace());
+			GameLoop.engineOutput.println(Arrays.toString(e.getStackTrace()));
 		}
 	}
 	
@@ -75,7 +80,7 @@ public class Screen implements Runnable {
 	    }
 	    
 		long lastTime = System.nanoTime();
-		double ns = 1000000000 / _amountOfTicks;
+		double ns;
 		double delta = 0;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
@@ -122,7 +127,6 @@ public class Screen implements Runnable {
 	 * Resizes the Screen to the new width and height and readjusts the ScaleFactor.
 	 * @param width <b>(Integer)</b> New width for the Screen.
 	 * @param height <b>(Integer)</b> New height for the Screen.
-	 * @author BauwenDR
 	 */
 	public static void resize(int width, int height) {
 		_frameWidth = width;
@@ -132,8 +136,6 @@ public class Screen implements Runnable {
 
 	@Internal
 	private static void changeSize(int width, int height) {
-		//frame.pack();
-		//frame.setBounds(0, 0, width, height);
 		_frame.setSize(width, height);
 		_scalefactor = (double) width / (double) _baseWidth;
 	}
@@ -142,15 +144,14 @@ public class Screen implements Runnable {
 	 * Sets display mode to fullscreen on a monitor of choosing.<br>
 	 * <u>note:</u> You can view an array of all displays with {@link #getGraphicsEnvironment}
 	 * @param monitor <b>(Integer)</b> number of monitor to display fullscreen frame on.
-	 * @author BauwenDR
 	 */
 	public static void setFullScreen(int monitor){
 		_currentWindow = monitor;
 		GraphicsDevice fullScreenMonitor = _graphicsEnvironment.getScreenDevices()[_currentWindow];
 
 		int fullScreenScale = Toolkit.getDefaultToolkit().getScreenResolution()+4;
-		int fullScreenWidth = (int) (fullScreenMonitor.getDisplayMode().getWidth() / fullScreenScale * 100);
-		int fullScreenHeight = (int) (fullScreenMonitor.getDisplayMode().getHeight() / fullScreenScale * 100);
+		int fullScreenWidth = fullScreenMonitor.getDisplayMode().getWidth() / fullScreenScale * 100;
+		int fullScreenHeight = fullScreenMonitor.getDisplayMode().getHeight() / fullScreenScale * 100;
 
 		_frame.dispose();
 		
@@ -167,8 +168,7 @@ public class Screen implements Runnable {
 	}
 
 	/**
-	 *  Exits out of fullscreen display if display mode is set to fullscreen
-	 * @author BauwenDR
+	 * Exits out of fullscreen display if display mode is set to fullscreen
 	 */
 	public static void exitFullScreen() {
 		resetRefreshRate();
@@ -188,7 +188,6 @@ public class Screen implements Runnable {
 	/**
 	 * Toggles fullscreen on and off (calls functions {@link #setFullScreen(int)} and {@link #exitFullScreen()} internally.
 	 * @param monitor <b>(Integer)</b> number of monitor to display fullscreen frame on.
-	 * @author BauwenDR
 	 */
 	public static void toggleFullScreen(int monitor) {
 		if(_isFullScreen) {
@@ -201,7 +200,6 @@ public class Screen implements Runnable {
 	/**
 	 * Function that checks if Screen is being displayed in full screen or not
 	 * @return isFullScreen (boolean)
-	 * @author BauwenDR
 	 */
 	public static boolean getFullScreen() {
 		return _isFullScreen;
@@ -218,7 +216,6 @@ public class Screen implements Runnable {
 	/**
 	 * Sets the icon for the Screen.
 	 * @param icon <b>(Image)</b> The new image for the Screen.
-	 * @author BauwenDR
 	 */
 	public static void setIcon(Image icon) {
 		_frame.setIconImage(icon);
@@ -227,16 +224,14 @@ public class Screen implements Runnable {
 	/**
 	 * Getter for the current screen width.
 	 * @return width (Integer)
-	 * @author BauwenDR
 	 */
-	public static int getWdith() {
+	public static int getWidth() {
 		return _frame.getWidth();
 	}
 	
 	/**
 	 * Getter for the current screen height.
 	 * @return height (Integer)
-	 * @author BauwenDR
 	 */
 	public static int getHeight() {
 		return _frame.getHeight();
@@ -246,7 +241,6 @@ public class Screen implements Runnable {
 	/**
 	 * Getter for the current screen ScaleFactor
 	 * @return scalefactor (Double)
-	 * @author BauwenDR
 	 */
 	public static double getScaleFactor() {
 		return _scalefactor;
@@ -257,7 +251,6 @@ public class Screen implements Runnable {
 	 * <br>
 	 * This allows for further manipulation of the screen.
 	 * @return frame (JFrame)
-	 * @author BauwenDR
 	 */
 	public static JFrame getScreen() {
 		return _frame;
@@ -266,7 +259,6 @@ public class Screen implements Runnable {
 	/**
 	 * Getter to see if the Screen rendering thread is running.
 	 * @return screenRunning (Boolean)
-	 * @author BauwenDR
 	 */
 	public Boolean getScreenRunning() {
 		return _screenRunning;
@@ -275,7 +267,6 @@ public class Screen implements Runnable {
 	/**
 	 * Getter for the current refreshRate or TPS of the screen.
 	 * @return refreshRate (Double)
-	 * @author BauwenDR
 	 */
 	public static double getRefreshRate() {
 		return _amountOfTicks;
@@ -286,7 +277,6 @@ public class Screen implements Runnable {
 	 * if set to -1, the framerate will be unlimited.<br>
 	 * <u>note:</u> setting framerate to unlimited is a debug feature as this will cause the video card to work at 100% capacity the whole time.
 	 * @param refreshRate (double) new refresh rate
-	 * @author BauwenDR
 	 */
 	public static void setRefreshRate(double refreshRate) {
 		if(refreshRate == -1) {
@@ -295,24 +285,26 @@ public class Screen implements Runnable {
 		
 		_amountOfTicks = refreshRate;
 	}
-	
-	public static void resetRefreshRate( ) {
+
+	/**
+	 * Sets the refresh rate to the default refresh rate.
+	 * The default refresh rate is the refresh rate of a computers primary monitor.
+	 */
+	public static void resetRefreshRate() {
 		setRefreshRate(_graphicsEnvironment.getDefaultScreenDevice().getDisplayMode().getRefreshRate());
 	}
 
 	/**
 	 * Sets the Cursor type (Image)
 	 * @param cursor (Cursor) The new Cursor type.
-	 * @author BauwenDR
 	 */
 	public static void setCursor(Cursor cursor) {
 		_component.setCursor(cursor);
 	}
 	/**
-	 * Sets whether or not the stacktrace gets printed when the render loop encounters an error.<br>
+	 * Sets whether the stacktrace gets printed when the render loop encounters an error.<br>
 	 * <u>note:</u> this is intended as a debugging feature
-	 * @param showErrors
-	 * @author BauwenDR
+	 * @param showErrors if stacktraces should be shown
 	 */
 	public static void setShowErrorLogs(boolean showErrors) {
 		_showErrors = showErrors;

@@ -10,5 +10,6 @@ repositories {
 }
 
 dependencies {
-    api 'net.java.dev.jna:jna:5.12.1', files('temp-libs/java-openal-2.0.0.jar')
+    api 'net.java.dev.jna:jna:5.12.1'
+    api files('temp-libs/java-openal-2.0.0.jar')
 }

@@ -1,5 +1,6 @@
 package com.valhalla.engine.io;
 
+import com.valhalla.engine.GameLoop;
 import org.valhalla.openal.ALException;
 import org.valhalla.openal.OpenAL;
 
@@ -15,12 +16,11 @@ public class SoundInterface {
 		try {
 			_openAl = new OpenAL();
 		} catch (ALException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			GameLoop.engineOutput.println("Error setting up the internal sound system: " + e.getMessage());
 		}
 	}
 	
-	@Internal //closes openAL service
+	@Internal
 	public static void cleanUp() {
 		_openAl.close();
 	}

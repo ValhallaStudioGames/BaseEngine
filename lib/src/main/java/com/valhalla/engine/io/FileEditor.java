@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Class with static function to read and write to files.
+ * @author BauwenDR
+ */
 public class FileEditor {
 	
 	/**
@@ -13,8 +17,7 @@ public class FileEditor {
 	 * <u>Note:</u> This function reads file as if they were plain text.
 	 * @param file <b>(File)</b> the file to read from.
 	 * @return (String[]) File split into an array, with new array-element being added each 'SPACE' or 'ENTER'.
-	 * @throws IOException
-	 * @author BauwenDR
+	 * @throws IOException if there is a problem reading the file
 	 */
 	public static String[] fileReader(File file) throws IOException {
 		StringBuilder builder = new StringBuilder();
@@ -34,8 +37,7 @@ public class FileEditor {
 	 * Transforms the input String[column][row] into a file on a given location with every incrementation of column starting a new line and row adding a 'SPACE' between 2 elements.
 	 * @param text <b>(String[][])</b> 2-dimensional array of text to put out in a file.
 	 * @param path <b>(String)</b> Location of where the file will be saved.
-	 * @throws IOException
-	 * @author BauwenDR
+	 * @throws IOException if there is a problem reading or writing to the file
 	 */
 	public static void writeFile(String[][] text, String path) throws IOException {
 		FileWriter writer = new FileWriter(path);

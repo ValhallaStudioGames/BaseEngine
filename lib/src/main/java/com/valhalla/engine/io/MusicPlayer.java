@@ -12,25 +12,27 @@ import org.valhalla.openal.SourceState;
 
 import com.valhalla.engine.GameLoop;
 
+/**
+ * Class used for playing back music files.
+ * @author BauwenDR
+ */
 public class MusicPlayer {
 
 	private static float _musicVolume = 1;
 
-	private static LinkedList<Source> _musicList = new LinkedList<>();
+	private static final LinkedList<Source> _musicList = new LinkedList<>();
 	
 	/**
 	 * Adds an audio clip given as a file path to the Internal playlist.<br>
 	 * <u>Note:</u> In order to play the music call {@link #playMusic} with the returned number.
 	 * @param Filepath <b>(String)</b> the location for the music file.
 	 * @return (Integer) The location of the music clip in the playlist.
-	 * @throws UnsupportedAudioFileException
-	 * @throws IOException
-	 * @throws LineUnavailableException
+	 * @throws IOException if there was an error reading a file
+	 * @throws ALException if there is an error with the sound interface
+	 * @throws UnsupportedAudioFileException if the specified file is in an unknown format
 	 * @see #playMusic
-	 * @author BauwenDR
-	 * @throws IOException, ALException, UnsupportedAudioFileException
 	 */
-	public static int addMusic(String Filepath) throws IOException, IOException, ALException, UnsupportedAudioFileException {
+	public static int addMusic(String Filepath) throws IOException, ALException, UnsupportedAudioFileException {
 		File music = new File(Filepath);
 		Source source = SoundInterface._openAl.createSource(music);
 		_musicList.add(source);
@@ -43,7 +45,6 @@ public class MusicPlayer {
 	 * @param repeat <b>(Boolean)</b> Play the clip continuously until the clip is stopped.
 	 * @see #addMusic
 	 * @see #stopMusic
-	 * @author BauwenDR
 	 */
 	public static void playMusic(int clipNumber, boolean repeat) {
 		try {
@@ -62,7 +63,6 @@ public class MusicPlayer {
 	 * @param clipNumber <b>(Integer)</b> Number of the clip in the playlist.
 	 * @see #playMusic
 	 * @see #clearMusic
-	 * @author BauwenDR
 	 */
 	public static void stopMusic(int clipNumber) {
 		try {
@@ -77,8 +77,7 @@ public class MusicPlayer {
 	 * <u>Note:</u> This function should only be used on clips that don't loop.
 	 * @param clipNumber <b>(Integer)</b> Number of the clip in the playlist.
 	 * @return hasStoppedPlaying (boolean)
-	 * @author BauwenDR
-	 * @throws ALException
+	 * @throws ALException if there is an error with the sound interface
 	 */
 	public static boolean hasClipFinished(int clipNumber) throws ALException {
 		return _musicList.get(clipNumber).getSourceState() == SourceState.STOPPED;
@@ -87,7 +86,6 @@ public class MusicPlayer {
 	/**
 	 * Stops and clears all audio clips in the internal playlist.<br>
 	 * <u>Note:</u> It is recommended to clear the playlist everytime you change GameStates and to only add an audio clip once.
-	 * @author BauwenDR
 	 */
 	public static void clearMusic() {
 		for(int i = 0; i < _musicList.size(); i++) {
@@ -100,7 +98,6 @@ public class MusicPlayer {
 	/**
 	 * Changes volume of music tracks
 	 * @param newVolume <b>(Integer)</b> volume for audio (from 0 to 100)
-	 * @author BauwenDR
 	 */
 	public static void setVolume(int newVolume) {
 		_musicVolume = (float) newVolume/100;	//rescale from [0; 100] to [0; 10]
@@ -116,7 +113,6 @@ public class MusicPlayer {
 	/**
 	 * Getter for the current volume of music
 	 * @return musicVolume (Integer)
-	 * @author BauwenDR
 	 */
 	public static int getVolume() {
 		return (int) (_musicVolume*100);

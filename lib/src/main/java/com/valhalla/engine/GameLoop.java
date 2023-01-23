@@ -13,22 +13,25 @@ import com.valhalla.engine.io.SoundEffectPlayer;
 import com.valhalla.engine.io.SoundInterface;
 import com.valhalla.engine.render.Draw;
 
+/**
+ * Entry point of the BaseEngine.<br>
+ * This class provides the engine itself along with Screen, Handler and io functionality.
+ * @author BauwenDR
+ */
 public class GameLoop extends Canvas implements Runnable {
 	private static final long serialVersionUID = 6896684776789891156L;
-	
+
 	private Thread _gameThread;
 	private boolean _running = false;
-	private Handler _handler;
+	private final Handler _handler;
 	private static double _tickRate;
 	private boolean _shutDownRequested = false;
 
-	private Graphics _graphics;
+	private final Screen _screen;
+	private final Draw _draw;
 	
-	private Screen _screen;
-	private Draw _draw;
-	
-	private KeyInput _keyinput;
-	private MouseInput _mouseinput;
+	private final KeyInput _keyinput;
+	private final MouseInput _mouseinput;
 	
 	private static long _ticksPassed = 0;
 	public static PrintStream engineOutput;
@@ -44,7 +47,6 @@ public class GameLoop extends Canvas implements Runnable {
 	 * @param tickRate <b>(Double)</b> The amount of ticks per second under normal circumstances.
 	 * @param engineOutputMethod <b>PrintStream</b> Output stream for engine, stream will not be closed when shutting down engine
 	 * @see com.valhalla.engine.render.Draw
-	 * @author BauwenDR
 	 */
 	public GameLoop(String title, int width, int height, double tickRate, PrintStream engineOutputMethod) {
 		GameLoop._tickRate = tickRate;
@@ -85,7 +87,6 @@ public class GameLoop extends Canvas implements Runnable {
 	 * @param height <b>(Integer)</b> Height for the internal Screen object.
 	 * @param tickRate <b>(Double)</b> The amount of ticks per second under normal circumstances.
 	 * @see com.valhalla.engine.render.Draw
-	 * @author BauwenDR
 	 */
 	public GameLoop(String title, int width, int height, double tickRate) {
 		this(title, width, height, tickRate, System.out);
@@ -101,9 +102,8 @@ public class GameLoop extends Canvas implements Runnable {
 	 * <b>engineOutputMethod</b> is defaulted to System.out
 	 * @param title <b>(String)</b> Name for the window that the baseEngine creates.
 	 * @param width <b>(Integer)</b> Width for the internal Screen object.
-	 * @param height <b>(Integer)</b> Height fot the internal Screen object.
+	 * @param height <b>(Integer)</b> Height for the internal Screen object.
 	 * @see com.valhalla.engine.render.Draw
-	 * @author BauwenDR
 	 */
 	public GameLoop(String title, int width, int height) {
 		this(title, width, height, 60.0);
@@ -181,10 +181,10 @@ public class GameLoop extends Canvas implements Runnable {
 		}
 		
 		try {
-			_graphics = currentBufferStrategy.getDrawGraphics();
+			Graphics _graphics = currentBufferStrategy.getDrawGraphics();
 			_draw.setGraphics(_graphics);
 	
-			Draw.fillRect(0,0, Screen.getWdith()+50 ,Screen.getHeight()+50, Color.white);
+			Draw.fillRect(0,0, Screen.getWidth()+50 ,Screen.getHeight()+50, Color.white);
 		
 			_handler.render();
 		
@@ -202,7 +202,6 @@ public class GameLoop extends Canvas implements Runnable {
 	/**
 	 * Getter for the draw used to render everything to screen.
 	 * @return draw (Draw)
-	 * @author BauwenDR
 	 */
 	public Draw getDraw() {
 		return _draw;
@@ -211,7 +210,6 @@ public class GameLoop extends Canvas implements Runnable {
 	/**
 	 * Getter for the internal Handler used for rendering and ticking all BaseClasses.
 	 * @return handler (Handler)
-	 * @author BauwenDR
 	 */
 	public Handler getHandler() {
 		return _handler;
@@ -220,7 +218,6 @@ public class GameLoop extends Canvas implements Runnable {
 	/**
 	 * Getter for the amount of gameticks that have passed since startup.
 	 * @return ticksPassed (Long)
-	 * @author BauwenDR
 	 */
 	public static long getTicksPassed() {
 		return _ticksPassed;
@@ -228,7 +225,6 @@ public class GameLoop extends Canvas implements Runnable {
 	
 	/**
 	 * Deconstructs the GameLoop along with underlying handler and screen at the end of a gametick.
-	 * @author BauwenDR
 	 */
 	public void close() {
 		_shutDownRequested=true;
@@ -240,7 +236,6 @@ public class GameLoop extends Canvas implements Runnable {
 	 * Getter for the internal Screen object for the GameLoop class.<br>
 	 * <u>Note:</u> Most functions in the Screen class are static functions.
 	 * @return screen (Screen)
-	 * @author BauwenDR
 	 */
 	public Screen getScreen() {
 		return _screen;
@@ -250,7 +245,6 @@ public class GameLoop extends Canvas implements Runnable {
 	 * Getter for the current tickrate the GameLoop is running at.<br>
 	 * This should be equal to amount specified.
 	 * @return tickRate (double)
-	 * @author BauwenDR
 	 */
 	public static double getTickRate() {
 		return _tickRate;

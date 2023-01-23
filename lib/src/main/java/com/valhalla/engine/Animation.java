@@ -4,6 +4,10 @@ import java.awt.image.BufferedImage;
 
 import com.valhalla.engine.internal.Internal;
 
+/**
+ * Class that represents an animation with a fixed framerate.
+ * @author BauwenDR
+ */
 public class Animation {
 
 	private Handler _handler;
@@ -23,7 +27,6 @@ public class Animation {
 	 * @see #getCurrentAnimationFrame()
 	 * @param animationFrames <b>(BufferedImage[])</b> pointer to an array that contains all animation frames
 	 * @param frameRate <b>(Integer)</b> the framerate for the animation formatted in frames per second (make sure value is below tickrate for optimal performance)
-	 * @author BauwenDR
 	 */
 	public Animation(BufferedImage[] animationFrames, int frameRate) {
 		this._animationFrames = animationFrames;
@@ -40,7 +43,6 @@ public class Animation {
 	 * @see #getCurrentAnimationFrame()
 	 * @param animationFrames <b>(BufferedImage[])</b> pointer to an array that contains all animation frames
 	 * @param frameRate <b>(Integer)</b> the framerate for the animation formatted in frames per second (make sure value is below tickrate for optimal performance)
-	 * @author BauwenDR
 	 */
 	public Animation(Handler handler, BufferedImage[] animationFrames, int frameRate) {
 		this._animationFrames = animationFrames;
@@ -49,10 +51,9 @@ public class Animation {
 	}
 	
 	/**
-	 * Starts the animation if it is was not already playing.
+	 * Starts the animation if it is not already playing.
 	 * @see #stop()
 	 * @param handler <b>(Handler)</b> The handler which will tick the Animation
-	 * @author BauwenDR
 	 */
 	public void start(Handler handler) {
 		this._handler = handler;
@@ -65,7 +66,6 @@ public class Animation {
 	/**
 	 * Stops the animation if it is playing.
 	 * @see #start(Handler)
-	 * @author BauwenDR
 	 */
 	public void stop() {
 		if(_isPlaying) {
@@ -79,7 +79,6 @@ public class Animation {
 	 * If an animation is playing this function will be called to update the currently displayed frame. (thus the @Internal)<br>
 	 * If you want to control the flow of the animation yourself (which is not recommended), you would need to call this function every tick.
 	 * @see #start(Handler)
-	 * @author BauwenDR
 	 */
 	@Internal
 	public void tick() {
@@ -95,7 +94,6 @@ public class Animation {
 	/**
 	 * Getter for the total amount of images in the animation.
 	 * @return animationFramesLength (Integer)
-	 * @author BauwenDR
 	 */
 	public int getAnimationLength() {
 		return _animationFrames.length;
@@ -104,7 +102,6 @@ public class Animation {
 	/**
 	 * Getter for the current frame the animation
 	 * @return animationFrame (Integer)
-	 * @author BauwenDR
 	 */
 	public int getCurrentAnimationFrame() {
 		return _animationFrame;
@@ -113,7 +110,6 @@ public class Animation {
 	/**
 	 * Getter for the current image of the animation
 	 * @return animationFrame (BufferedImage)
-	 * @author BauwenDR
 	 */
 	public BufferedImage getAnimationFrame() {
 		return _animationFrames[_animationFrame];

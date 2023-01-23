@@ -10,6 +10,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.valhalla.engine.exception.DrawLayerOutOfBoundsException;
 import com.valhalla.engine.internal.Internal;
 
+/**
+ * Class that handles the ticking and rendering for all BaseClasses, GameStates and Animations.
+ * @author BauwenDR
+ */
 public class Handler {
 	
 	private Hashtable<Integer, List<BaseClass> > _classes = new Hashtable<>();
@@ -45,7 +49,6 @@ public class Handler {
 	 * @param baseClass <b>(BaseClass or inherited)</b> BaseClass to be added to the Handler.
 	 * @param drawLayer <b>(Integer)</b> The layer at which the BaseClass should be rendered from 0 (= bottom) to 10 (= top).
 	 * @see #addUniqueClass
-	 * @author BauwenDR
 	 */
 	public void addClass(BaseClass baseClass, int drawLayer) throws DrawLayerOutOfBoundsException {
 		if(drawLayer > 10 || drawLayer < 0) {
@@ -74,8 +77,7 @@ public class Handler {
 	 * @param baseClass <b>(BaseClass or inherited)</b> BaseClass to be added if it is not already present.
 	 * @param drawLayer <b>(Integer)</b> The layer at which the BaseClass should be rendered from 0 (= bottom) to 10 (= top).
 	 * @return True if the class was added, and false if it was already in the Handler and thus not added.
-	 * @see #addClass
-	 * @author BauwenDR
+	 * @see #addClass(BaseClass, int)
 	 */
 	public boolean addUniqueClass(BaseClass baseClass, int drawLayer) {
 		boolean  classPresent = false;
@@ -97,7 +99,6 @@ public class Handler {
 	/**
 	 * Adds a baseClass to the removal queue in order to be removed. If adding to the queue fails it will be printed out in console.
 	 * @param baseClass <b>(BaseClass or inherited)</b> The class to be removed from the Handler at the end of the tick.
-	 * @author BauwenDR
 	 */
 	public void removeClass(BaseClass baseClass) {
 		try {
@@ -124,7 +125,7 @@ public class Handler {
 		_removeQueue.clear();
 		
 		//add queue
-		_addQueue.forEach((baseClass, drawLayer) -> addImmediateClass(baseClass, drawLayer));
+		_addQueue.forEach(this::addImmediateClass);
 		_addQueue.clear();
 		
 		//removing all classes if clearClasses()  was previously run
@@ -133,7 +134,7 @@ public class Handler {
 			_clearClasses = false;
 			
 			//adding all classes that were added after calling clear
-			_addQueuePostReset.forEach((baseClass, drawLayer) -> 	addImmediateClass(baseClass, drawLayer));
+			_addQueuePostReset.forEach(this::addImmediateClass);
 			_addQueuePostReset.clear();
 		}
 	}
@@ -141,7 +142,6 @@ public class Handler {
 	/**
 	 * Removes all BaseClasses from the Handler.
 	 * This function does however not remove the GameState.
-	 * @author BauwenDR
 	 */
 	public void clearClasses() {
 		_clearClasses = true;
@@ -152,7 +152,6 @@ public class Handler {
 	 * <u>Warning:</u> Function might be unstable if not used at the end of a Tick.<br>
 	 * It is strongly recommended to use {@link #clearClasses instead.
 	 * @see #clearClasses
-	 * @author BauwenDR
 	 */
 	public void removeImmediateClasses() {
 		_classes.forEach((layer, classList) -> classList.clear());
@@ -161,7 +160,6 @@ public class Handler {
 	/**
 	 * Sets the current GameState to the given GameState, and links to Handler in the GameState to this object.
 	 * @param gameState <b>(GameState or inherited)</b> The new GameState.
-	 * @author BauwenDR
 	 */
 	public void setGameState(GameState gameState, boolean clearClasses) {
 		if(clearClasses) {
@@ -176,7 +174,6 @@ public class Handler {
 	 * Checks the Handler to see if a class is already in the Handler, and thus drawn and ticked.
 	 * @param baseClass <b>(BaseClass or inherited)</b> The class to check
 	 * @return see if a class is already present in the Handler
-	 * @author BauwenDR
 	 */
 	public boolean isClassPresentInHandler(BaseClass baseClass) {
 		_isClassPresentInHandler=false;
@@ -190,28 +187,26 @@ public class Handler {
 	
 	/**
 	 * Adds an animation to the list of playing animations.<br>
-	 * <u>Note:</u> It is advised to use the {@link  Animation#start(Handler)} function, to insure animtions are started correctly.
-	 * @param animtion <b>(Animation)</b> The animation that will be added to the animations list.
-	 * @author BauwenDR
+	 * <u>Note:</u> It is advised to use the {@link  Animation#start(Handler)} function, to insure animations are started correctly.
+	 * @param animation <b>(Animation)</b> The animation that will be added to the animations list.
 	 */
-	public void addAnimation(Animation animtion) {
-		_animations.add(animtion);
+	public void addAnimation(Animation animation) {
+		_animations.add(animation);
 	}
 	
 	/**
 	 * Removes  an animation to the list of playing animations.<br>
-	 * <u>Note:</u> It is advised to use the {@link  Animation#stop()} function, to insure animtions are stopped correctly.
-	 * @param animtion <b>(Animation)</b> The animation that will be removed from the animations list.
-	 * @author BauwenDR
+	 * <u>Note:</u> It is advised to use the {@link  Animation#stop()} function, to insure animations are stopped correctly.
+	 * @param animation <b>(Animation)</b> The animation that will be removed from the animations list.
 	 */
-	public void removeAnimation(Animation animtion) {
-		_animations.remove(animtion);
+	public void removeAnimation(Animation animation) {
+		_animations.remove(animation);
 	}
 	
 	@Internal
 	void tick(){
-		_classes.forEach((layer, classList) -> classList.forEach((baseClass) -> baseClass.tick()));
-		_animations.forEach((animation) -> animation.tick());
+		_classes.forEach((layer, classList) -> classList.forEach(BaseClass::tick));
+		_animations.forEach(Animation::tick);
 		
 		if(_gameState != null) {
 			_gameState.tick();

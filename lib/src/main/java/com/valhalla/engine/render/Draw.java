@@ -50,12 +50,11 @@ public class Draw{
 
 	/**
 	 * Draws a line to the screen, adjusted by the ScaleFactor.
-	 * @param x <b>(Integer)</b> Starting x-position of the line.
-	 * @param y <b>(Integer)</b> Starting y-position of the line.
-	 * @param width <b>(Integer)</b> Width of the line (=amount of pixels to travel sidewards).
-	 * @param height <b>(Integer)</b> Height of the line (=amount of pixels to travel downwards)
+	 * @param x1 <b>(Integer)</b> Starting x-position of the line.
+	 * @param y1 <b>(Integer)</b> Starting y-position of the line.
+	 * @param x2 <b>(Integer)</b> Ending x-position of the line
+	 * @param y2 <b>(Integer)</b> Ending y-position of the line
 	 * @param colour <b>(Color)</b> Colour of the text.
-	 * @author BauwenDR
 	 */
 	public static void drawLine(int x1, int y1, int x2, int y2, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -70,7 +69,6 @@ public class Draw{
 	 * @param width <b>(Integer)</b> Width of the rectangle.
 	 * @param height <b>(Integer)</b> Height of the rectangle.
 	 * @param colour <b>(Color)</b> Colour of the border.
-	 * @author BauwenDR
 	 */
 	public static void drawRect(int x, int y, int width, int height, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -82,7 +80,6 @@ public class Draw{
 	 * Draws the border of a rectangle to the screen, adjusted by the ScaleFactor.
 	 * @param rectangle <b>(Rectangle)</b> The rectangle of which the border will be drawn.
 	 * @param colour <b>(Color)</b> Colour of the border.
-	 * @author BauwenDR
 	 */
 	public static void drawRect(Rectangle rectangle, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -97,7 +94,6 @@ public class Draw{
 	 * @param width <b>(Integer)</b> Width of the rectangle.
 	 * @param height <b>(Integer)</b> Height of the rectangle.
 	 * @param colour <b>(Color)</b> Colour of the Area.
-	 * @author BauwenDR
 	 */
 	public static void fillRect(int x, int y, int width, int height, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -109,7 +105,6 @@ public class Draw{
 	 * Draws a rectangle to the screen, adjusted by the ScaleFactor.
 	 * @param rectangle <b>(Rectangle)</b> The rectangle that will be drawn.
 	 * @param colour <b>(Color)</b> Colour of the border.
-	 * @author BauwenDR
 	 */
 	public static void fillRect(Rectangle rectangle, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -125,7 +120,6 @@ public class Draw{
 	 * @param fontName <b>(String)</b> Name of the font to be used for drawing the String.
 	 * @param fontSize <b>(Integer)</b> Size of the font.
 	 * @param colour <b>(Color)</b> Colour of the text.
-	 * @author BauwenDR
 	 */
 	public static void drawString(String string, int x, int y, String fontName, int fontSize, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -142,7 +136,6 @@ public class Draw{
 	 * @param fontName <b>(String)</b> Name of the font to be used for drawing the String.
 	 * @param fontSize <b>(Integer)</b> Size of the font.
 	 * @param colour <b>(Color)</b> Colour of the text.
-	 * @author BauwenDR
 	 */
 	public static void drawCenteredString(String string, Rectangle rectangle, String fontName, int fontSize, Color colour) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -174,7 +167,6 @@ public class Draw{
 	 * @param y <b>(Integer)</b> y-position for the String.
 	 * @param font <b>(Font)</b> Custom font for the String.
 	 * @param colour <b>(Color)</b> Colour of the text.
-	 * @author BauwenDR
 	 */
 	public static void drawCustomString(String string, int x, int y, Font font, Color colour) {
 		FontRenderContext frc = new FontRenderContext(null, true, true);
@@ -256,7 +248,6 @@ public class Draw{
 	 * @param cropY <b>(Integer)</b> y-position from which to start cropping.
 	 * @param cropWidth <b>(Integer)</b> Width of the cropped image.
 	 * @param cropHeight <b>(Integer)</b> Height of the cropped image.
-	 * @author BauwenDR
 	 */
 	public static void drawCroppedImage(BufferedImage image, int x, int y, int width, int height, int cropX, int cropY, int cropWidth, int cropHeight) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -265,13 +256,12 @@ public class Draw{
 	}
 	
 	/**
-	 * Draws an oval inside of a given rectangular area, adjusted by the ScaleFactor.
+	 * Draws an oval inside a given rectangular area, adjusted by the ScaleFactor.
 	 * <u>Note:</u> The x- and y-coords are the top left coordinates for the bounding box, not the position of the ovals centre.
 	 * @param x <b>(Integer)</b> x-position of the rectangular area.
 	 * @param y <b>(Integer)</b> y-position of the rectangular area.
 	 * @param width <b>(Integer)</b> width of the rectangular area.
 	 * @param height<b>(Integer)</b> height of the rectangular area.
-	 * @author BauwenDR
 	 */
 	public static void drawOval(int x, int y, int width, int height) {
 		_scaleFactor = Screen.getScaleFactor();
@@ -279,12 +269,11 @@ public class Draw{
 	}
 	
 	/**
-	 * Draws a circle inside of a given rectangular area, adjusted by the ScaleFactor.
+	 * Draws a circle inside a given rectangular area, adjusted by the ScaleFactor.
 	 * <u>Note:</u> This function uses drawOval internally, so x and y are the position of the top left corner of the bounding box, not the centre of the circle.
 	 * @param x <b>(Integer)</b> x-position of the rectangular area.
 	 * @param y <b>(Integer)</b> y-position of the rectangular area.
-	 * @param radius <b>(Integer)</b> diameter/ width of the 
-	 * @author BauwenDR
+	 * @param diameter <b>(Integer)</b> diameter/ width of the oval
 	 */
 	public static void drawCircle(int x, int y, int diameter) {
 		drawOval(x, y, diameter, diameter);
@@ -294,7 +283,6 @@ public class Draw{
 	 * Sets the opacity for all the functions in Draw.
 	 * <u>Note:</u> The alpha value never gets reset inside the library.
 	 * @param alpha <b>(float)</b> alpha value from (1 = everything) to (0 = fully transparent).
-	 * @author BauwenDR
 	 */
 	public static void setOpacity(float alpha) {
 		_grapics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));

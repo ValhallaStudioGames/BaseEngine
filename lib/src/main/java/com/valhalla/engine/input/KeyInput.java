@@ -25,10 +25,10 @@ import com.valhalla.engine.internal.Internal;
 public class KeyInput implements KeyListener{
 	
 	private static final int _keyAmount = 255;
-	private static boolean[] _keyHeld = new boolean[_keyAmount];
-	private static boolean[] _keyPressed = new boolean[_keyAmount];
-	private static boolean[] _keyLowering = new boolean[_keyAmount];
-	private static boolean[] _lastTick = new boolean[_keyAmount];
+	private static final boolean[] _keyHeld = new boolean[_keyAmount];
+	private static final boolean[] _keyPressed = new boolean[_keyAmount];
+	private static final boolean[] _keyLowering = new boolean[_keyAmount];
+	private static final boolean[] _lastTick = new boolean[_keyAmount];
 	
 	@Internal
 	public KeyInput() {
@@ -78,7 +78,6 @@ public class KeyInput implements KeyListener{
 	 * Keycodes can be found as constants in {@link java.awt.event.KeyEvent}
 	 * @param keyCode <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True if key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyHeld(int keyCode) {
 		return _keyHeld[keyCode];
@@ -89,7 +88,6 @@ public class KeyInput implements KeyListener{
 	 * Keycodes can be found as constants in {@link java.awt.event.KeyEvent}
 	 * @param keyCode <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True for one tick if key was pressed down (falling edge).
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyPressed(int keyCode) {
 		return _keyPressed[keyCode];
@@ -100,7 +98,6 @@ public class KeyInput implements KeyListener{
 	 * Keycodes can be found as constants in {@link java.awt.event.KeyEvent}
 	 * @param keyCode <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True for one tick if key is beginning to be pressed down (rising edge).
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyLowering(int keyCode) {
 		return _keyLowering[keyCode];
@@ -109,7 +106,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'W' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean wHeld() {
 		return _keyHeld[KeyEvent.VK_W];
@@ -118,7 +114,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'A' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean aHeld() {
 		return _keyHeld[KeyEvent.VK_A];
@@ -127,7 +122,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'S' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean sHeld() {
 		return _keyHeld[KeyEvent.VK_S];
@@ -136,7 +130,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'D' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean dHeld() {
 		return _keyHeld[KeyEvent.VK_D];
@@ -145,7 +138,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'SPACE' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean spaceHeld() {
 		return _keyHeld[KeyEvent.VK_SPACE];
@@ -154,7 +146,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'SHIFT' key is held down.
-	 * @author BauwenDR
 	 */
 	public static boolean shiftHeld() {
 		return _keyHeld[KeyEvent.VK_SHIFT];
@@ -163,7 +154,6 @@ public class KeyInput implements KeyListener{
 	/**
 	 * Method for commonly used key.
 	 * @return True if 'ENTER' was pressed down.
-	 * @author BauwenDR
 	 */
 	public static boolean enterPressed() {
 		return _keyPressed[KeyEvent.VK_ENTER];

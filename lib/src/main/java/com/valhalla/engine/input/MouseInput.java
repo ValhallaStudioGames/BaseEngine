@@ -30,10 +30,10 @@ import com.valhalla.engine.internal.Internal;
 public class MouseInput implements MouseListener, MouseMotionListener, MouseWheelListener{
 	
 	private static final int _keyAmount = 5;
-	private static boolean[] _keyHeld = new boolean[_keyAmount];
-	private static boolean[] _keyPressed = new boolean[_keyAmount];
-	private static boolean[] _keyLowering = new boolean[_keyAmount];
-	private static boolean[] _lastTick = new boolean[_keyAmount];
+	private static final boolean[] _keyHeld = new boolean[_keyAmount];
+	private static final boolean[] _keyPressed = new boolean[_keyAmount];
+	private static final boolean[] _keyLowering = new boolean[_keyAmount];
+	private static final boolean[] _lastTick = new boolean[_keyAmount];
 	private static boolean _scrollingUp, _scrollingDown;
 	private static double _scrollingAmount;
 	
@@ -64,18 +64,15 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 		_scrollingAmount = 0;
 		
 		for (int key = 0; key < _keyAmount; key++) {
+
+			//falling edge -> button is going down, beginning of a button press
+			_keyPressed[key] = _lastTick[key] && !_keyHeld[key];
 			
-			_keyPressed[key] = false;
-			
-			if(_lastTick[key] && !_keyHeld[key]) {	//falling edge -> button is going down, beginning of a button press
-				_keyPressed[key] = true;
-			}
-			
-			if(!_lastTick[key] && _keyHeld[key]) {	//rising edge -> button is going up, end of a button press
-				_keyLowering[key] = true;
-			}
-			
-			_lastTick[key] = _keyHeld[key];	//copy keyHeld to LastTick
+			//rising edge -> button is going up, end of a button press
+			_keyLowering[key] = !_lastTick[key] && _keyHeld[key];
+
+			//copy keyHeld to LastTick
+			_lastTick[key] = _keyHeld[key];
 		}
 		
 	}
@@ -128,7 +125,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	 * Left mouse button is 1, and right mouse button is 3.
 	 * @param button <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True if key is held down
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyHeld(int button) {
 		return _keyHeld[button];
@@ -139,7 +135,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	 * Left mouse button is 1, and right mouse button is 3.
 	 * @param button <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True for one tick if key was pressed down (falling edge).
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyPressed(int button) {
 		return _keyPressed[button];
@@ -150,7 +145,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	 * Left mouse button is 1, and right mouse button is 3.
 	 * @param button <b>(Integer)</b> Code for the key that is being checked.
 	 * @return True for one tick if key is beginning to be pressed down (rising edge).
-	 * @author BauwenDR
 	 */
 	public static boolean getKeyLowering(int button) {
 		return _keyLowering[button];
@@ -159,7 +153,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	/**
 	 * Get x-position of the mouse cursor relative to the top left of the Screen.
 	 * @return (Integer) x-position of the mouse cursor.
-	 * @author BauwenDR
 	 */
 	public static double getX() {
 		return (_mouseX / Screen.getScaleFactor());
@@ -168,7 +161,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	/**
 	 * Get y-position of the mouse cursor relative to the top left of the Screen.
 	 * @return (Integer) y-position of the mouse cursor.
-	 * @author BauwenDR
 	 */
 	public static double getY() {
 		return (_mouseY / Screen.getScaleFactor());
@@ -177,7 +169,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	/**
 	 * Get the amount the mouse has moved horizontally since the last tick
 	 * @return (double) mouseMovedX
-	 * @author BauwenDR
 	 */
 	public static double getXMoved() {
 		return _mouseMovedX;
@@ -186,7 +177,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	/**
 	 * Get the amount the mouse has moved vertically since the last tick
 	 * @return (double) mouseMovedY
-	 * @author BauwenDR
 	 */
 	public static double getYMoved() {
 		return _mouseMovedY;
@@ -195,7 +185,6 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	/**
 	 * Get position of the mouse cursor relative to the top left of the Screen.
 	 * @return (Point) position of the mouse cursor.
-	 * @author BauwenDR
 	 */
 	public static Point getPoint() {
 		Point p = new Point();
@@ -204,18 +193,16 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	}
 	
 	/**
-	 * Get whether or not the scrollwheel has scrolled up in the last frame.
+	 * Get whether the scrollwheel has scrolled up in the last frame.
 	 * @return True if the scrollwheel scrolled up.
-	 * @author BauwenDR
 	 */
 	public static boolean getScrollingUp() {
 		return _scrollingUp;
 	}
 	
 	/**
-	 * Get whether or not the scrollwheel has scrolled down in the last frame.
+	 * Get whether the scrollwheel has scrolled down in the last frame.
 	 * @return True if the scrollwheel scrolled down.
-	 * @author BauwenDR
 	 */
 	public static boolean getScrollingDown() {
 		return _scrollingDown;
@@ -226,50 +213,45 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	 * It returns a positive value if the mouse scrolled down and positive if the mouse scrolled up.<br>
 	 * <u>Note:</u> If you scroll twice in one frame, it will only detect the latter of the 2 scrolls. The change of this happening at a decent framerate is very unlikely.
 	 * @return The amount of scrolling the scrollwheel did the last tick.
-	 * @author BauwenDR
 	 */
 	public static double getScrollingAmount() {
 		return _scrollingAmount;
 	}
 	
 	/**
-	 * Get if a the left mouse button is being held down.
+	 * Get if the left mouse button is being held down.
 	 * @return True if the left mouse button is being held down
-	 * @author BauwenDR
 	 */
 	public static boolean getLeftMouseHeld() {
 		return getKeyHeld(1);
 	}
 	
 	/**
-	 * Get if a the right mouse button is being held down.
+	 * Get if the right mouse button is being held down.
 	 * @return True if the right mouse button is being held down
-	 * @author BauwenDR
 	 */
 	public static boolean getRightMouseHeld() {
 		return getKeyHeld(3);
 	}
 
 	/**
-	 * Get if a the left mouse button is being released.
+	 * Get if the left mouse button is being released.
 	 * @return True if the left mouse button has just been released
-	 * @author BauwenDR
 	 */
 	public static boolean getLeftMousePressed() {
 		return getKeyPressed(1);
 	}
 	
 	/**
-	 * Get if a the right mouse button is being released.
+	 * Get if the right mouse button is being released.
 	 * @return True if the right mouse button has just been released
-	 * @author BauwenDR
 	 */
 	public static boolean getRightMousePressed() {
 		return getKeyPressed(3);
 	}
 	
 	/**
-	 * Get if a the left mouse button is lowering.
+	 * Get if the left mouse button is lowering.
 	 * @return True if the left mouse button has just been pressed down
 	 * @author BauwenDR
 	 */
@@ -278,7 +260,7 @@ public class MouseInput implements MouseListener, MouseMotionListener, MouseWhee
 	}
 	
 	/**
-	 * Get if a the right mouse button is lowering.
+	 * Get if the right mouse button is lowering.
 	 * @return True if the right mouse button has just been pressed down
 	 * @author BauwenDR
 	 */

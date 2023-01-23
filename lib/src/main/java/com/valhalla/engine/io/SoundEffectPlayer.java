@@ -12,6 +12,10 @@ import org.valhalla.openal.Source;
 import com.valhalla.engine.GameLoop;
 import com.valhalla.engine.internal.Internal;
 
+/**
+ * Class used for playing back short sound effects
+ * @author BauwenDR
+ */
 public class SoundEffectPlayer {
 
 	private static float _soundEffectVolume = 1;
@@ -29,7 +33,6 @@ public class SoundEffectPlayer {
 	 * @see #playSoundEffect(String)
 	 * @param soundEffectName <b>(String)</b> soundEffectName
 	 * @param soundEffectPath <b>(String)</b> soundEffectPath
-	 * @author BauwenDR
 	 */
 	public static void addSoundEffect(String soundEffectName, String soundEffectPath) {	
 		try {
@@ -45,7 +48,6 @@ public class SoundEffectPlayer {
 	 * Gets the OpenAL Source behind a sound effect, this provides the freedom to fully configure a sound effect.
 	 * @param soundEffectName <b>(String)</b> soundEffectName
 	 * @return The Source associated with a sound effect or NULL when the sound effect was not loaded
-	 * @author BauwenDR
 	 */
 	public static Source getSoundEffect(String soundEffectName) {
 		return _soundEffectList.get(soundEffectName);
@@ -55,7 +57,6 @@ public class SoundEffectPlayer {
 	 * Plays a sound effect that has been loaded (sound effects can be played more than once).<br>
 	 * <u>Note:</u> If this function throws a null-pointer exception, the soundeffect was most likely not loaded.
 	 * @param soundEffectName <b>(String)</b> soundEffectName
-	 * @author BauwenDR
 	 */
     public static void playSoundEffect(String soundEffectName) {
 		try {
@@ -70,7 +71,6 @@ public class SoundEffectPlayer {
     /**
      * Removes a sound effect from memory.
 	 * @param soundEffectName <b>(String)</b> soundEffectName
-     * @author BauwenDR
      */
     public static void removeSoundEffect(String soundEffectName) {
     	try {
@@ -85,7 +85,6 @@ public class SoundEffectPlayer {
     /**
 	 * Changes volume of all sound effects.
 	 * @param newVolume <b>(Integer)</b> volume for audio (from 0 to 100)
-	 * @author BauwenDR
 	 */
 	public static void setVolume(int newVolume) {
 		_soundEffectVolume = (float) newVolume/100;	//rescale from [0; 100] to [0; 1]
@@ -94,7 +93,6 @@ public class SoundEffectPlayer {
 	/**
 	 * Getter for the current volume of sound effects
 	 * @return musicVolume (Integer)
-	 * @author BauwenDR
 	 */
 	public static int getVolume() {
 		return (int) (_soundEffectVolume*100);
