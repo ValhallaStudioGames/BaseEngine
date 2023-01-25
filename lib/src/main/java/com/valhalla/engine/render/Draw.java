@@ -9,7 +9,7 @@ import com.valhalla.engine.Screen;
 import com.valhalla.engine.internal.Internal;
 
 /**
- * Functions for drawing to the Java JFrame.<br>
+ * Functions for drawing onto the Screen.<br>
  * <br>
  * <b>Contains:</b>
  * <ul>
