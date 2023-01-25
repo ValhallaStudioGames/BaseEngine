@@ -22,9 +22,10 @@ public class Handler {
 	private Hashtable<BaseClass, Integer> _addQueuePostReset = new Hashtable<>();
 	
 	private LinkedList<Animation> _animations = new LinkedList<>();
-	
+
+	private static final int _LAYERS = 10;
+
 	private GameState _gameState;
-	private final int _layers = 10;
 	private int _renderIterator;
 	private int _tickIterator;
 	
@@ -34,7 +35,7 @@ public class Handler {
 	@Internal
 	public Handler() {
 		_classes.clear();
-		for(_renderIterator = 0; _renderIterator < _layers; ++_renderIterator) {
+		for(_renderIterator = 0; _renderIterator < _LAYERS; ++_renderIterator) {
 			_classes.put(_renderIterator, new LinkedList<>());
 		}
 	}
@@ -82,7 +83,7 @@ public class Handler {
 	public boolean addUniqueClass(BaseClass baseClass, int drawLayer) {
 		boolean  classPresent = false;
 			 
-		for(_tickIterator = 0; _tickIterator < _layers; ++_tickIterator) { //check if already present
+		for(_tickIterator = 0; _tickIterator < _LAYERS; ++_tickIterator) { //check if already present
 			if(_classes.get(_tickIterator).contains(baseClass)) {
 				classPresent = true;
 				break;
@@ -110,7 +111,7 @@ public class Handler {
 
 	@Internal
 	private void removeImmediateClass(BaseClass baseClass) {
-		for(_tickIterator = 0; _tickIterator < _layers; ++_tickIterator) {
+		for(_tickIterator = 0; _tickIterator < _LAYERS; ++_tickIterator) {
 			if(_classes.get(_tickIterator).remove(baseClass))
 				break;
 		}
@@ -217,7 +218,7 @@ public class Handler {
 	
 	@Internal
 	void render() {
-		for(_renderIterator = 0; _renderIterator < _layers; _renderIterator++) {
+		for(_renderIterator = 0; _renderIterator < _LAYERS; _renderIterator++) {
 			Iterator<BaseClass> renderClassIterator  = _classes.get(_renderIterator).iterator();
 			while(renderClassIterator.hasNext()) {
 				renderClassIterator.next().render();

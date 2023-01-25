@@ -1,12 +1,14 @@
 package com.valhalla.engine;
 
 import com.valhalla.engine.internal.Internal;
+import com.valhalla.engine.util.Renderable;
+import com.valhalla.engine.util.Tickable;
 
 /**
  * Abstract class/ blueprint for a simple Game Object that can be ticked and rendered.
  * @author BauwenDR
  */
-public abstract class BaseClass {
+public abstract class BaseClass implements Tickable, Renderable {
 	
 	protected int drawLayer;
 	protected Handler handler;
@@ -32,11 +34,13 @@ public abstract class BaseClass {
 	/**
 	 * Method used for updating an objects position or registering updates
 	 */
+	@Override
 	public abstract void tick();
 
 	/**
 	 * Method used for drawing the object on screen
 	 */
+	@Override
 	public abstract void render();
 	
 	/**

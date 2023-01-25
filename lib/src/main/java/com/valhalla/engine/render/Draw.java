@@ -25,9 +25,8 @@ import com.valhalla.engine.internal.Internal;
  *  <li>{@link #setOpacity}</li>
  * </ul>
  * @author BauwenDR
- * 
  */
-public class Draw{
+public class Draw {
 	
 	private static Graphics2D _grapics2D;
 	private static double _scaleFactor;

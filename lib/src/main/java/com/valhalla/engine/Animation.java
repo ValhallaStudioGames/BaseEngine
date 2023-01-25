@@ -3,12 +3,13 @@ package com.valhalla.engine;
 import java.awt.image.BufferedImage;
 
 import com.valhalla.engine.internal.Internal;
+import com.valhalla.engine.util.Tickable;
 
 /**
  * Class that represents an animation with a fixed framerate.
  * @author BauwenDR
  */
-public class Animation {
+public class Animation implements Tickable {
 
 	private Handler _handler;
 	
@@ -80,7 +81,7 @@ public class Animation {
 	 * If you want to control the flow of the animation yourself (which is not recommended), you would need to call this function every tick.
 	 * @see #start(Handler)
 	 */
-	@Internal
+	@Internal @Override
 	public void tick() {
 		if(_ticksPassed%_frameRate == 0 && _ticksPassed > 0) {
 			_animationFrame++;

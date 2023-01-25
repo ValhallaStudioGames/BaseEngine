@@ -1,13 +1,15 @@
 package com.valhalla.engine;
 
 import com.valhalla.engine.internal.Internal;
+import com.valhalla.engine.util.Renderable;
+import com.valhalla.engine.util.Tickable;
 
 /**
  * Abstract class/ blueprint for a simple GameState/ GateStateController.<br>
  * A GameState object will usually be responsible for drawing UI and managing BaseClasses.
  * @author BauwenDR
  */
-public abstract class GameState {
+public abstract class GameState implements Tickable, Renderable {
 	
 	protected Handler handler;
 	
@@ -32,11 +34,13 @@ public abstract class GameState {
 	/**
 	 * Method used for detecting game updates and managing all BaseClasses
 	 */
+	@Override
 	public abstract void tick();
 
 	/**
 	 * Method used for drawing a HUD or UI.
 	 */
+	@Override
 	public abstract void render();
 	
 	@Internal
