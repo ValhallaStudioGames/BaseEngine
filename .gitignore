@@ -25,6 +25,8 @@ hs_err_pid*
 /gradle/
 build/
 bin/
+gradlew
+gradlew.bat
 
 #eclipse files
 .settings
