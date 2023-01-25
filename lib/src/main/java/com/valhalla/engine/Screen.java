@@ -6,55 +6,45 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 
 import com.valhalla.engine.internal.Internal;
+import com.valhalla.engine.screen.ScreenImplementation;
 
 /**
  * Class is in charge of the physical screen.
  * @author BauwenDR
  */
 public class Screen implements Runnable {
-	
+
+	private static Screen _screen;
+	private static ScreenImplementation _screenImplementation;
+
+	private static GameLoop _gameLoop;
+
 	private static boolean _screenRunning = false;
 	private static Thread _renderer;
-	private static GameLoop _gameloop;
 
-	private static int _currentWindow = 0;
 	private static boolean _isFullScreen = false;
 
 	private static boolean _shutDownRequested = false;
-	
-	private static int _baseWidth;
-	private static int _frameWidth,frameHeight;
-	private static double _scalefactor = 1;
-	
-	private static JFrame _frame;
-	private static Component _component;
 	
 	private static double _amountOfTicks = 0;
 
 	private static final GraphicsEnvironment _graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	
 	static boolean _showErrors = false;
-	
-	@Internal
-	public Screen(GameLoop gl, String title, int width, int height) {
-		Screen._gameloop = gl;
-		_baseWidth = width;
-		_frameWidth = width;
-		frameHeight = height;
-		
-		_frame = new JFrame(title);
-		
-		_frame.setBounds(0, 0, width, height);
-		_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		_frame.setResizable(false);
-		_frame.setLocationRelativeTo(null);
-		_frame.setVisible(true);
-		_frame.add(gl);
-		
-		gl.start();
-		_component = _frame.getComponent(0);
+
+	synchronized static Screen getInstance(GameLoop gameLoop) {
+		if(_screen == null) {
+			_gameLoop = gameLoop;
+			_screen = new Screen();
+		}
+
+		return _screen;
 	}
-	
+
+	synchronized static void setScreenImplementation(ScreenImplementation implementation) {
+		_screenImplementation = implementation;
+	}
+
 	@Internal
 	synchronized void start() {
 		_renderer = new Thread(this);
@@ -90,7 +80,7 @@ public class Screen implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while(delta >=1) {
-				_gameloop.render();
+				_gameLoop.render();
 				frames++;
 				delta--;
 				
@@ -109,12 +99,8 @@ public class Screen implements Runnable {
 		if(_isFullScreen) {
 			exitFullScreen();
 		}
-		
-		_frame.setVisible(false);
-		_frame.setEnabled(false);
-		_frame.dispose();
-		_frame = null;
-		
+
+		_screenImplementation.shutdown();
 		stop();
 	}
 	
@@ -125,19 +111,19 @@ public class Screen implements Runnable {
 	
 	/**
 	 * Resizes the Screen to the new width and height and readjusts the ScaleFactor.
-	 * @param width <b>(Integer)</b> New width for the Screen.
-	 * @param height <b>(Integer)</b> New height for the Screen.
+	 * @param newWidth <b>(Integer)</b> New width for the Screen.
+	 * @param newHeight <b>(Integer)</b> New height for the Screen.
 	 */
-	public static void resize(int width, int height) {
-		_frameWidth = width;
-		frameHeight = height;
-		changeSize(width, height);
+	public static void resize(int newWidth, int newHeight) {
+		_screenImplementation.resize(newWidth, newHeight);
 	}
 
-	@Internal
-	private static void changeSize(int width, int height) {
-		_frame.setSize(width, height);
-		_scalefactor = (double) width / (double) _baseWidth;
+	/**
+	 * Toggles fullscreen on and off (calls functions {@link #setFullScreen(int)} and {@link #exitFullScreen()} internally).
+	 * @param monitor <b>(Integer)</b> number of monitor to display fullscreen frame on.
+	 */
+	public static void toggleFullScreen(int monitor) {
+		_screenImplementation.toggleFullScreen(monitor);
 	}
 
 	/**
@@ -145,64 +131,23 @@ public class Screen implements Runnable {
 	 * <u>note:</u> You can view an array of all displays with {@link #getGraphicsEnvironment}
 	 * @param monitor <b>(Integer)</b> number of monitor to display fullscreen frame on.
 	 */
-	public static void setFullScreen(int monitor){
-		_currentWindow = monitor;
-		GraphicsDevice fullScreenMonitor = _graphicsEnvironment.getScreenDevices()[_currentWindow];
-
-		int fullScreenScale = Toolkit.getDefaultToolkit().getScreenResolution()+4;
-		int fullScreenWidth = fullScreenMonitor.getDisplayMode().getWidth() / fullScreenScale * 100;
-		int fullScreenHeight = fullScreenMonitor.getDisplayMode().getHeight() / fullScreenScale * 100;
-
-		_frame.dispose();
-		
-		_frame.setUndecorated(true);
-		changeSize(fullScreenWidth, fullScreenHeight);
-		
-		setRefreshRate(fullScreenMonitor.getDisplayMode().getRefreshRate());
-		_frame.setLocationRelativeTo(null);	
-		
-		_frame.setVisible(true);
-		_gameloop.requestFocus();
-
-		_isFullScreen = true;
+	public static void setFullScreen(int monitor) {
+		_screenImplementation.setFullScreen(monitor);
 	}
 
 	/**
 	 * Exits out of fullscreen display if display mode is set to fullscreen
 	 */
 	public static void exitFullScreen() {
-		resetRefreshRate();
+		_screenImplementation.exitFullScreen();
+	}
 
-		_frame.dispose();
-		
-		_frame.setUndecorated(false);
-		changeSize(_frameWidth, frameHeight);
-		_frame.setLocationRelativeTo(null);
-		
-		_frame.setVisible(true);
-		_gameloop.requestFocus();
-		
-		_isFullScreen = false;
-	}
-	
-	/**
-	 * Toggles fullscreen on and off (calls functions {@link #setFullScreen(int)} and {@link #exitFullScreen()} internally.
-	 * @param monitor <b>(Integer)</b> number of monitor to display fullscreen frame on.
-	 */
-	public static void toggleFullScreen(int monitor) {
-		if(_isFullScreen) {
-			exitFullScreen();
-		}else {
-			setFullScreen(monitor);
-		}
-	}
-	
 	/**
 	 * Function that checks if Screen is being displayed in full screen or not
 	 * @return isFullScreen (boolean)
 	 */
 	public static boolean getFullScreen() {
-		return _isFullScreen;
+		return _screenImplementation.getFullScreen();
 	}
 
 	/**
@@ -212,13 +157,17 @@ public class Screen implements Runnable {
 	public static GraphicsEnvironment getGraphicsEnvironment() {
 		return _graphicsEnvironment;
 	}
+
+	public static Frame getScreen() {
+		return _screenImplementation.getFrame();
+	}
 	
 	/**
 	 * Sets the icon for the Screen.
 	 * @param icon <b>(Image)</b> The new image for the Screen.
 	 */
 	public static void setIcon(Image icon) {
-		_frame.setIconImage(icon);
+		_screenImplementation.setIcon(icon);
 	}
 	
 	/**
@@ -226,7 +175,7 @@ public class Screen implements Runnable {
 	 * @return width (Integer)
 	 */
 	public static int getWidth() {
-		return _frame.getWidth();
+		return _screenImplementation.getWidth();
 	}
 	
 	/**
@@ -234,7 +183,7 @@ public class Screen implements Runnable {
 	 * @return height (Integer)
 	 */
 	public static int getHeight() {
-		return _frame.getHeight();
+		return _screenImplementation.getHeight();
 	}
 	
 	
@@ -243,19 +192,9 @@ public class Screen implements Runnable {
 	 * @return scalefactor (Double)
 	 */
 	public static double getScaleFactor() {
-		return _scalefactor;
+		return _screenImplementation.getScaleFactor();
 	}
-	
-	/**
-	 * Getter for the underlying JFrame object.<br>
-	 * <br>
-	 * This allows for further manipulation of the screen.
-	 * @return frame (JFrame)
-	 */
-	public static JFrame getScreen() {
-		return _frame;
-	}
-	
+
 	/**
 	 * Getter to see if the Screen rendering thread is running.
 	 * @return screenRunning (Boolean)
@@ -294,13 +233,6 @@ public class Screen implements Runnable {
 		setRefreshRate(_graphicsEnvironment.getDefaultScreenDevice().getDisplayMode().getRefreshRate());
 	}
 
-	/**
-	 * Sets the Cursor type (Image)
-	 * @param cursor (Cursor) The new Cursor type.
-	 */
-	public static void setCursor(Cursor cursor) {
-		_component.setCursor(cursor);
-	}
 	/**
 	 * Sets whether the stacktrace gets printed when the render loop encounters an error.<br>
 	 * <u>note:</u> this is intended as a debugging feature

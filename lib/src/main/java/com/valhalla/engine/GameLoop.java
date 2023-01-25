@@ -12,6 +12,7 @@ import com.valhalla.engine.internal.Internal;
 import com.valhalla.engine.io.SoundEffectPlayer;
 import com.valhalla.engine.io.SoundInterface;
 import com.valhalla.engine.render.Draw;
+import com.valhalla.engine.screen.JavaScreen;
 
 /**
  * Entry point of the BaseEngine.<br>
@@ -58,7 +59,8 @@ public class GameLoop extends Canvas implements Runnable {
 		}
 		
 		_handler = new Handler();
-		_screen = new Screen(this, title, width, height);
+		_screen = Screen.getInstance(this);
+		Screen.setScreenImplementation(new JavaScreen(this, title, width, height));
 		_draw = new Draw();
 		
 		//initialise input
@@ -73,6 +75,8 @@ public class GameLoop extends Canvas implements Runnable {
 		//initialise OpenAL
 		new SoundInterface();
 		new SoundEffectPlayer();
+
+		start();
 	}
 	
 	/**
