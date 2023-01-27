@@ -13,6 +13,7 @@ import com.valhalla.engine.io.SoundEffectPlayer;
 import com.valhalla.engine.io.SoundInterface;
 import com.valhalla.engine.render.Draw;
 import com.valhalla.engine.screen.JavaScreen;
+import com.valhalla.engine.screen.ScreenImplementation;
 
 /**
  * Entry point of the BaseEngine.<br>
@@ -28,6 +29,7 @@ public class GameLoop extends Canvas implements Runnable {
 	private static double _tickRate;
 	private boolean _shutDownRequested = false;
 
+	private final ScreenImplementation _screenImplementation;
 	private final Screen _screen;
 	private final Draw _draw;
 	
@@ -59,8 +61,9 @@ public class GameLoop extends Canvas implements Runnable {
 		}
 		
 		_handler = new Handler();
-		_screen = Screen.getInstance(this);
-		Screen.setScreenImplementation(new JavaScreen(this, title, width, height));
+		_screen = Screen.initialiseScreen(this);
+		_screenImplementation = new JavaScreen(this, title, width, height);
+		Screen.setScreenImplementation(_screenImplementation);
 		_draw = new Draw();
 		
 		//initialise input
@@ -131,7 +134,7 @@ public class GameLoop extends Canvas implements Runnable {
 		}
 	}
 	
-	@Internal
+	@Internal @Override
 	public void run() {
 		this.requestFocus();
 		long lastTime = System.nanoTime();
@@ -178,39 +181,9 @@ public class GameLoop extends Canvas implements Runnable {
 	
 	@Internal
 	void render() {
-		BufferStrategy currentBufferStrategy = this.getBufferStrategy();
-		if(currentBufferStrategy == null) {
-			this.createBufferStrategy(3);
-			return;
-		}
-		
-		try {
-			Graphics _graphics = currentBufferStrategy.getDrawGraphics();
-			_draw.setGraphics(_graphics);
-	
-			Draw.fillRect(0,0, Screen.getWidth()+50 ,Screen.getHeight()+50, Color.white);
-		
-			_handler.render();
-		
-			_graphics.dispose();
-			currentBufferStrategy.show();
-		}catch (Exception e) {
-			if(Screen._showErrors) {
-				e.printStackTrace();
-			}else {
-				System.out.println("BaseEngine Error " + e.getLocalizedMessage());
-			}
-		}	
+		_handler.render();
 	}
-	
-	/**
-	 * Getter for the draw used to render everything to screen.
-	 * @return draw (Draw)
-	 */
-	public Draw getDraw() {
-		return _draw;
-	}
-	
+
 	/**
 	 * Getter for the internal Handler used for rendering and ticking all BaseClasses.
 	 * @return handler (Handler)

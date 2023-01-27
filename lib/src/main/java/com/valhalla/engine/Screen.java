@@ -14,25 +14,26 @@ import com.valhalla.engine.screen.ScreenImplementation;
  */
 public class Screen implements Runnable {
 
+	//not static variables
+	private Thread _renderer;
+
+	//static variables
 	private static Screen _screen;
 	private static ScreenImplementation _screenImplementation;
 
 	private static GameLoop _gameLoop;
 
 	private static boolean _screenRunning = false;
-	private static Thread _renderer;
-
-	private static boolean _isFullScreen = false;
-
 	private static boolean _shutDownRequested = false;
-	
+	private static boolean _showErrors = false; //TODO could maybe be moved to GameLoop?
+
 	private static double _amountOfTicks = 0;
 
 	private static final GraphicsEnvironment _graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	
-	static boolean _showErrors = false;
 
-	synchronized static Screen getInstance(GameLoop gameLoop) {
+	private Screen() { }
+
+	synchronized static Screen initialiseScreen(GameLoop gameLoop) {
 		if(_screen == null) {
 			_gameLoop = gameLoop;
 			_screen = new Screen();
@@ -43,6 +44,7 @@ public class Screen implements Runnable {
 
 	synchronized static void setScreenImplementation(ScreenImplementation implementation) {
 		_screenImplementation = implementation;
+		_screenImplementation.initialise();
 	}
 
 	@Internal
@@ -54,7 +56,7 @@ public class Screen implements Runnable {
 	}
 	
 	@Internal
-	synchronized static void stop() {
+	synchronized void stop() {
 		try {
 			_renderer.join();
 			_screenRunning = false;
@@ -63,7 +65,7 @@ public class Screen implements Runnable {
 		}
 	}
 	
-	@Internal
+	@Internal @Override
 	public synchronized void run() {
 	    if(_amountOfTicks == 0) {
 	    	resetRefreshRate();
@@ -80,7 +82,18 @@ public class Screen implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while(delta >=1) {
-				_gameLoop.render();
+				_screenImplementation.startDrawCycle();
+
+				try {
+					_gameLoop.render();
+				}catch (Exception e) {
+					if(_showErrors) {
+						e.printStackTrace();
+					}
+					System.out.println("BaseEngine Error " + e.getLocalizedMessage());
+				}
+
+				_screenImplementation.endDrawCycle();
 				frames++;
 				delta--;
 				
@@ -96,7 +109,7 @@ public class Screen implements Runnable {
 			}
 		}
 		
-		if(_isFullScreen) {
+		if(_screenImplementation.getFullScreen()) {
 			exitFullScreen();
 		}
 
@@ -231,6 +244,10 @@ public class Screen implements Runnable {
 	 */
 	public static void resetRefreshRate() {
 		setRefreshRate(_graphicsEnvironment.getDefaultScreenDevice().getDisplayMode().getRefreshRate());
+	}
+
+	public static boolean getShowErrorLogs() {
+		return _showErrors;
 	}
 
 	/**

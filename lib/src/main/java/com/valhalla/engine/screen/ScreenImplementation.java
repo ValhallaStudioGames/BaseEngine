@@ -51,7 +51,9 @@ public abstract class ScreenImplementation {
     }
 
     // Abstract functions
-    //public abstract void initialise();
+    public abstract void startDrawCycle();
+    public abstract void endDrawCycle();
+    public abstract void initialise();
     public abstract void shutdown();
     public abstract void changeSize(int newWidth, int newHeight);
     public abstract void setFullScreen(int monitor);
