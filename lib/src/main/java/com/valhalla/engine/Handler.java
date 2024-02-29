@@ -151,7 +151,7 @@ public class Handler {
 	/**
 	 *  Removes all BaseClasses immediately from the Handler.<br>
 	 * <u>Warning:</u> Function might be unstable if not used at the end of a Tick.<br>
-	 * It is strongly recommended to use {@link #clearClasses instead.
+	 * It is strongly recommended to use {@link #clearClasses} instead.
 	 * @see #clearClasses
 	 */
 	public void removeImmediateClasses() {
@@ -160,7 +160,8 @@ public class Handler {
 	
 	/**
 	 * Sets the current GameState to the given GameState, and links to Handler in the GameState to this object.
-	 * @param gameState <b>(GameState or inherited)</b> The new GameState.
+	 * @param gameState <b>(GameState or inherited)</b> The new GameState
+	 * @param clearClasses <b>(Boolean)</b> clear the classes in the associated handler upon setting the new state
 	 */
 	public void setGameState(GameState gameState, boolean clearClasses) {
 		if(clearClasses) {

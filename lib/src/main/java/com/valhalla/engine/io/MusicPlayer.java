@@ -6,9 +6,9 @@ import java.util.LinkedList;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.valhalla.openal.ALException;
-import org.valhalla.openal.Source;
-import org.valhalla.openal.SourceState;
+import org.valhalla.openal.util.ALException;
+import org.valhalla.openal.intermediate.Source;
+import org.valhalla.openal.util.SourceState;
 
 import com.valhalla.engine.GameLoop;
 

@@ -1,5 +1,11 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 archivesBaseName = "${project.archives_base_name}"
@@ -11,5 +17,59 @@ repositories {
 
 dependencies {
     api 'net.java.dev.jna:jna:5.12.1'
-    api files('temp-libs/java-openal-2.0.0.jar')
+    api 'io.github.valhallastudiogames:java-openal:2.0.2'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'BaseEngine'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Java BaseEngine'
+                description = 'Light weight, simple to use Java game library'
+                url = 'https://github.com/ValhallaStudioGames/BaseEngine'
+                licenses {
+                    license {
+                        name = 'GPLv3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'BauwenDR'
+                        name = 'Lead Programmer'
+                        email = 'RDnewuaB@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git@github.com:ValhallaStudioGames/BaseEngine.git'
+                    developerConnection = 'scm:git:git@github.com:ValhallaStudioGames/BaseEngine.git'
+                    url = 'https://github.com/ValhallaStudioGames/BaseEngine/tree/master'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+            def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        }
+    }
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
 }
