@@ -21,6 +21,7 @@ public abstract class GameState implements Tickable, Renderable {
 	/**
 	 * Constructor for a GameState, this one will automatically set itself as the GameState in Handler.
 	 * @param handler <b>(Handler)</b> Link to the Handler object for which it will be the GameState.
+	 * @param clearClasses <b>(Boolean)</b> clear the classes in the associated handler upon setting the new state
 	 */
 	public GameState(Handler handler, boolean clearClasses) {
 		handler.setGameState(this, clearClasses);

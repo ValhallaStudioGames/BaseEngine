@@ -38,10 +38,11 @@ public class Animation implements Tickable {
 	/**
 	 * Creates a new animation that will update the animationFrame according to the specified framerate.
 	 * This constructor will automatically start the animation.
-	 *  @see #start(Handler)
+	 * @see #start(Handler)
 	 * @see #stop()
 	 * @see #getAnimationFrame()
 	 * @see #getCurrentAnimationFrame()
+	 * @param handler <b>(Handler)</b> the handler that will be used for ticking
 	 * @param animationFrames <b>(BufferedImage[])</b> pointer to an array that contains all animation frames
 	 * @param frameRate <b>(Integer)</b> the framerate for the animation formatted in frames per second (make sure value is below tickrate for optimal performance)
 	 */

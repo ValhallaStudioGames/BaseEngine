@@ -1,7 +1,7 @@
 package com.valhalla.engine.io;
 
 import com.valhalla.engine.GameLoop;
-import org.valhalla.openal.ALException;
+import org.valhalla.openal.util.ALException;
 import org.valhalla.openal.OpenAL;
 
 import com.valhalla.engine.internal.Internal;
