@@ -150,7 +150,7 @@ public class GameLoop extends Canvas implements Runnable {
 				}
 				if(System.currentTimeMillis() - timer > 1000) {
 					timer += 1000;
-					System.out.println("tps: " + frames);
+					engineOutput.println("tps: " + frames);
 					frames = 0;
 				}
 				if(_shutDownRequested) {
@@ -194,7 +194,7 @@ public class GameLoop extends Canvas implements Runnable {
 			if(Screen._showErrors) {
 				e.printStackTrace();
 			}else {
-				System.out.println("BaseEngine Error " + e.getLocalizedMessage());
+				System.err.println("BaseEngine Error " + e.getLocalizedMessage());
 			}
 		}	
 	}
